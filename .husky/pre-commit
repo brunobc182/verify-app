@@ -4,5 +4,5 @@
 yarn lint-staged
 yarn lint --fix
 yarn typecheck
-npx jest --passWithNoTests
+yarn test --passWithNoTests --watchAll=false
  
