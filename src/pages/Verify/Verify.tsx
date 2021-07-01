@@ -2,13 +2,16 @@ import React from "react";
 import { SubmitHandler } from "react-hook-form";
 import { Grid, Typography } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
+import { useHistory } from "react-router-dom";
 import { VerifyForm } from "../../organisms/VerifyForm";
-import useVerify from "../../hooks/useVerify";
+import { useVerify } from "../../hooks";
 import { Inputs } from "../../organisms/VerifyForm/VerifyForm.types";
 import useStyles from "./Verify.style";
 
 const Verify: React.FC = () => {
   const classes = useStyles();
+  const history = useHistory();
+
   const { loading, errors, verify } = useVerify();
 
   const onSubmit: SubmitHandler<Inputs> = async (formValues) => {
@@ -23,8 +26,11 @@ const Verify: React.FC = () => {
       },
     };
 
-    const response = verify({ data });
-    console.log(data, response);
+    const response = await verify({ data });
+
+    if (response.success) {
+      history.push("/report");
+    }
   };
 
   return (
@@ -45,7 +51,7 @@ const Verify: React.FC = () => {
       </Grid>
       {errors &&
         errors.map((error) => (
-          <Grid className={classes.itemWrapper} item>
+          <Grid key={error.title} className={classes.itemWrapper} item>
             <Alert severity="error">
               <AlertTitle>{error.title}</AlertTitle>
               {error.message}
