@@ -2,7 +2,8 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   buttonWrapper: {
-    alignSelf: "center",
+    width: "100%",
+    marginTop: theme.spacing(2),
   },
 }));
 

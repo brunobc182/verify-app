@@ -1,7 +1,6 @@
 import React from "react";
 import { useForm, Controller } from "react-hook-form";
 import {
-  Box,
   Button,
   Checkbox,
   CircularProgress,
@@ -15,6 +14,8 @@ import { Inputs, VerifyFormProps } from "./VerifyForm.types";
 import useStyles from "./VerifyForm.style";
 
 const VerifyForm: React.FC<VerifyFormProps> = ({ loading, onSubmit }) => {
+  const classes = useStyles();
+
   const {
     register,
     handleSubmit,
@@ -25,7 +26,6 @@ const VerifyForm: React.FC<VerifyFormProps> = ({ loading, onSubmit }) => {
     mode: "onChange",
   });
 
-  const classes = useStyles();
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Grid spacing={2} direction="column" container>
@@ -36,6 +36,7 @@ const VerifyForm: React.FC<VerifyFormProps> = ({ loading, onSubmit }) => {
             variant="outlined"
             error={!!errors.transactionID}
             helperText={errors.transactionID?.message}
+            fullWidth
             {...register("transactionID")}
           />
         </Grid>
@@ -46,6 +47,7 @@ const VerifyForm: React.FC<VerifyFormProps> = ({ loading, onSubmit }) => {
             variant="outlined"
             error={!!errors.collectionID}
             helperText={errors.collectionID?.message}
+            fullWidth
             {...register("collectionID")}
           />
         </Grid>
@@ -103,11 +105,11 @@ const VerifyForm: React.FC<VerifyFormProps> = ({ loading, onSubmit }) => {
             )}
           />
         </Grid>
-        <Grid xs={12} item className={classes.buttonWrapper}>
+        <Grid justify="center" className={classes.buttonWrapper} container>
           {loading ? (
             <CircularProgress />
           ) : (
-            <Button type="submit" variant="contained" color="primary">
+            <Button type="submit" variant="contained" color="primary" fullWidth>
               Verify
             </Button>
           )}
