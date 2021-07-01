@@ -6,7 +6,17 @@ export interface VerifyOptions {
   dry_run: boolean;
 }
 
-export interface Verify {
+export interface VerifyResponseSuccess {
+  collection_id: string;
+}
+
+export interface VerifyResponseError {
+  message?: string;
+}
+
+export type VerifyResponse = VerifyResponseSuccess & VerifyResponseError;
+
+export interface VerifyPayload {
   transaction_id: string;
   collection_id: string;
   partner_name: string;
@@ -16,5 +26,5 @@ export interface Verify {
 export type VerifyAPI = ({
   data,
 }: {
-  data: Verify;
-}) => Promise<HTTPservicesReturn<Verify>>;
+  data: VerifyPayload;
+}) => Promise<HTTPservicesReturn<VerifyResponse>>;

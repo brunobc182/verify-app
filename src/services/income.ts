@@ -24,11 +24,11 @@ export const verifyIncome: VerifyAPI = async ({ data }) => {
   }
 };
 
-export const retrieveEmploymentVerification: VerifyAPI = async ({ data }) => {
+export const retrieveIncomeVerification: VerifyAPI = async ({ data }) => {
   try {
     const response = await http({
       method: "GET",
-      url: `/employment/income/${data.transaction_id}/collections/${data.collection_id}`,
+      url: `/income/transactions/${data.transaction_id}/collections/${data.collection_id}`,
     });
 
     return {
