@@ -6,10 +6,10 @@ const useStyles = makeStyles((theme) => ({
   },
   heading: {
     fontSize: theme.typography.pxToRem(24),
-    maxWidth: 320,
+    maxWidth: 325,
     lineHeight: 1.3,
   },
-  itemWrapper: { width: "100%", maxWidth: 320 },
+  itemWrapper: { width: "100%", maxWidth: 325 },
 }));
 
 export default useStyles;

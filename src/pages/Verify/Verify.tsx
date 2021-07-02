@@ -1,11 +1,13 @@
 import React from "react";
 import { SubmitHandler } from "react-hook-form";
-import { Grid, Typography } from "@material-ui/core";
+import { Grid, Typography, IconButton } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
+import { FileCopyOutlined } from "@material-ui/icons";
 import { useHistory } from "react-router-dom";
 import { VerifyForm } from "../../organisms/VerifyForm";
 import { useVerify } from "../../hooks";
 import { Inputs } from "../../organisms/VerifyForm/VerifyForm.types";
+import { copyTextToClipboard } from "../../utils";
 import useStyles from "./Verify.style";
 
 const Verify: React.FC = () => {
@@ -52,7 +54,22 @@ const Verify: React.FC = () => {
       {errors &&
         errors.map((error) => (
           <Grid key={error.title} className={classes.itemWrapper} item>
-            <Alert severity="error">
+            <Alert
+              severity={error.severity}
+              action={
+                error.url && (
+                  <IconButton
+                    aria-label="copy to clipboard"
+                    color="inherit"
+                    onClick={() => {
+                      copyTextToClipboard(error.url);
+                    }}
+                  >
+                    <FileCopyOutlined fontSize="inherit" />
+                  </IconButton>
+                )
+              }
+            >
               <AlertTitle>{error.title}</AlertTitle>
               {error.message}
             </Alert>

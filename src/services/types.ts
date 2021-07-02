@@ -8,10 +8,17 @@ export interface VerifyOptions {
 
 export interface VerifyResponseSuccess {
   collection_id: string;
+  status?: string;
+  url?: string;
 }
 
+export interface IncomeMessageError {
+  message: {
+    message: string;
+  };
+}
 export interface VerifyResponseError {
-  message?: string;
+  message: string & IncomeMessageError;
 }
 
 export type VerifyResponse = VerifyResponseSuccess & VerifyResponseError;

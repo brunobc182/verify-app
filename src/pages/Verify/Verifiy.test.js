@@ -155,6 +155,57 @@ describe("Verify Form", () => {
     expect(screen.getByText(retrieveIncomeCollectionError)).toBeInTheDocument();
   });
 
+  it("shows warning if requests to verify service has ACTION_NEEDED on response", async () => {
+    useVerify.mockReturnValue({
+      loading: false,
+      errors: errorsMessageRetrieveCollection,
+      verify: jest.fn().mockReturnValue({
+        success: false,
+        data: {
+          ok: true,
+          status: "ACTION_NEEDED",
+          url: "www.test.com",
+        },
+      }),
+      clear: jest.fn(),
+    });
+
+    render(<Verify />);
+
+    const transactionID = screen.getByLabelText(transactionIDLabel);
+    const collectionID = screen.getByLabelText(collectionIDLabel);
+
+    act(() => {
+      fireEvent.change(transactionID, {
+        target: { value: "A54A1F1G4A1FDR954ASXASD1" },
+      });
+    });
+
+    act(() => {
+      fireEvent.change(collectionID, {
+        target: { value: "C1H4912384QAS8E283921482" },
+      });
+    });
+
+    await waitFor(() => transactionID);
+    await waitFor(() => collectionID);
+
+    const submitButton = screen.getByRole("button", {
+      name: submitButtonLabel,
+    });
+
+    act(() => {
+      fireEvent.click(submitButton);
+    });
+
+    await waitFor(() => submitButton);
+
+    expect(
+      screen.getByText(retrieveEmploymentCollectionError)
+    ).toBeInTheDocument();
+    expect(screen.getByText(retrieveIncomeCollectionError)).toBeInTheDocument();
+  });
+
   it("navigates to Report page when requests has succeed", async () => {
     useVerify.mockReturnValue({
       loading: false,
