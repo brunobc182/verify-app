@@ -5,9 +5,10 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
   },
   heading: {
-    fontSize: theme.typography.pxToRem(24),
+    fontSize: theme.typography.pxToRem(32),
     maxWidth: 325,
     lineHeight: 1.3,
+    fontWeight: theme.typography.fontWeightBold,
   },
   itemWrapper: { width: "100%", maxWidth: 325 },
 }));

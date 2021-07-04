@@ -13,7 +13,6 @@ import useStyles from "./Verify.style";
 const Verify: React.FC = () => {
   const classes = useStyles();
   const history = useHistory();
-
   const { loading, errors, verify } = useVerify();
 
   const onSubmit: SubmitHandler<Inputs> = async (formValues) => {
@@ -31,7 +30,10 @@ const Verify: React.FC = () => {
     const response = await verify({ data });
 
     if (response.success) {
-      history.push("/report");
+      history.push("/report", {
+        employment: response.employment.data,
+        income: response.income.data,
+      });
     }
   };
 
