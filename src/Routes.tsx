@@ -6,6 +6,7 @@ import {
   Redirect,
 } from "react-router-dom";
 import { Verify } from "./pages/Verify";
+import { Report } from "./pages/Report";
 
 function Routes() {
   return (
@@ -13,6 +14,9 @@ function Routes() {
       <Switch>
         <Route exact path="/">
           <Verify />
+        </Route>
+        <Route exact path="/report">
+          <Report />
         </Route>
         <Route path="*">
           <Redirect to="/" />
