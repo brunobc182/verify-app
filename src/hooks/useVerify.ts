@@ -1,51 +1,8 @@
 import { useState } from "react";
 import { employment, income } from "../services";
-import { HTTPservicesReturn } from "../services/http/types";
-import { VerifyPayload, VerifyResponse } from "../services/types";
-
-interface ErrorMessage {
-  title: string;
-  message: string;
-}
-
-enum Service {
-  verify = "verify",
-  retrieveCollection = "retrieveCollection",
-}
-
-type ErrorMessagList = Array<ErrorMessage>;
-
-const buildErrorMessage = (
-  responseVerifyEmployment: HTTPservicesReturn<VerifyResponse>,
-  responseVerifyIncome: HTTPservicesReturn<VerifyResponse>,
-  service: Service
-): ErrorMessagList => {
-  const defaultMessage = "An error has occurred, please try again later.";
-
-  let errorList = [];
-
-  if (!responseVerifyEmployment.ok) {
-    errorList.push({
-      title:
-        service === Service.verify
-          ? "Verify Employment"
-          : "Retrieve Employment Collection",
-      message: responseVerifyEmployment.data?.message || defaultMessage,
-    });
-  }
-
-  if (!responseVerifyIncome.ok) {
-    errorList.push({
-      title:
-        service === Service.verify
-          ? "Verify Income"
-          : "Retrieve Income Collection",
-      message: responseVerifyIncome.data?.message || defaultMessage,
-    });
-  }
-
-  return errorList;
-};
+import { VerifyPayload } from "../services/types";
+import { ErrorMessagList, Service } from "../utils/buildVerifyErrorMessage";
+import { buildVerifyErrorMessage } from "../utils";
 
 const useVerify = () => {
   const [loading, setLoading] = useState(false);
@@ -60,7 +17,7 @@ const useVerify = () => {
     data,
   }: {
     data: VerifyPayload;
-  }): Promise<{ success: boolean }> => {
+  }): Promise<{ success: boolean; employment?: any; income?: any }> => {
     init();
     setLoading(true);
 
@@ -73,13 +30,10 @@ const useVerify = () => {
       }),
     ]);
 
-    console.log(responseVerifyEmployment);
-    console.log(responseVerifyIncome);
-
     if (!responseVerifyEmployment.ok || !responseVerifyIncome.ok) {
       setLoading(false);
 
-      const errorMessages = buildErrorMessage(
+      const errorMessages = buildVerifyErrorMessage(
         responseVerifyEmployment,
         responseVerifyIncome,
         Service.verify
@@ -87,7 +41,22 @@ const useVerify = () => {
 
       setErrors(errorMessages);
 
-      console.log(errorMessages);
+      return { success: false };
+    }
+
+    if (
+      responseVerifyEmployment.data.status === "ACTION_NEEDED" ||
+      responseVerifyIncome.data.status === "ACTION_NEEDED"
+    ) {
+      setLoading(false);
+
+      const errorMessages = buildVerifyErrorMessage(
+        responseVerifyEmployment,
+        responseVerifyIncome,
+        Service.verify
+      );
+
+      setErrors(errorMessages);
 
       return { success: false };
     }
@@ -97,16 +66,10 @@ const useVerify = () => {
       responseRetrieveCollectionIncome,
     ] = await Promise.all([
       employment.retrieveEmploymentVerification({
-        data: {
-          ...data,
-          collection_id: responseVerifyEmployment.data.collection_id,
-        },
+        data,
       }),
       income.retrieveIncomeVerification({
-        data: {
-          ...data,
-          collection_id: responseVerifyIncome.data.collection_id,
-        },
+        data,
       }),
     ]);
 
@@ -116,7 +79,7 @@ const useVerify = () => {
     ) {
       setLoading(false);
 
-      const errorMessages = buildErrorMessage(
+      const errorMessages = buildVerifyErrorMessage(
         responseRetrieveCollectionEmployment,
         responseRetrieveCollectionIncome,
         Service.retrieveCollection
@@ -128,7 +91,12 @@ const useVerify = () => {
     }
 
     setLoading(false);
-    return { success: true };
+
+    return {
+      success: true,
+      employment: responseRetrieveCollectionEmployment,
+      income: responseRetrieveCollectionIncome,
+    };
   };
 
   return {
