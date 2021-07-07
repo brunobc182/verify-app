@@ -40,10 +40,10 @@ const VerifyReport: React.FC<VerifyReportProps> = ({ title, data }) => {
         </Typography>
         <Typography className={classes.text}>
           Verification State:
-          <strong>{data.metadata.verification_state}</strong>
+          <strong>{data.metadata?.verification_state}</strong>
         </Typography>
         <Typography className={classes.text}>
-          Information: <strong>{data.metadata.results.info}</strong>
+          Information: <strong>{data.metadata?.results?.info}</strong>
         </Typography>
         <Typography className={classes.text}>
           Created:
